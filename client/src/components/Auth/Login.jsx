@@ -31,57 +31,72 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-2xl p-8">
-        <h2 className="text-3xl font-bold text-center mb-2">Welcome Back</h2>
-        <p className="text-gray-600 text-center mb-6">Sign in to your account</p>
+    <div className="auth-outer">
+      <div className="auth-card">
+        <div className="auth-left">
+          <div className="logo">ED TECH TASK MANAGER</div>
 
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-            {error}
+          <div className="visual-card" style={{flex:1,display:'flex',alignItems:'flex-end',justifyContent:'flex-start',padding:'18px'}}>
+            <div>
+              <h4>Capturing Moments,</h4>
+              <p>Create memories with tasks and progress.</p>
+            </div>
           </div>
-        )}
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="auth-right">
           <div>
-            <label className="block text-sm font-semibold mb-2">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter your email"
-            />
+            <h2>Sign in</h2>
+            <div className="muted">Welcome back — please enter your details</div>
           </div>
 
-          <div>
-            <label className="block text-sm font-semibold mb-2">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter your password"
-            />
+          {error && (
+            <div style={{background:'#3b1f2c',padding:10,borderRadius:8,border:'1px solid rgba(255,255,255,0.04)'}}>
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="" style={{display:'flex',flexDirection:'column',gap:12}}>
+            <div className="auth-row">
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="auth-input"
+                placeholder="Email"
+              />
+            </div>
+
+            <div>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                className="auth-input"
+                placeholder="Password"
+              />
+            </div>
+
+            <button type="submit" disabled={loading} className="auth-cta">
+              {loading ? 'Signing in...' : 'Sign In'}
+            </button>
+          </form>
+
+          <div className="auth-divider">Or sign in with</div>
+
+          <div className="social-row">
+            <button className="social-btn">Google</button>
+            <button className="social-btn">Apple</button>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 disabled:bg-indigo-400"
-          >
-            {loading ? 'Signing in...' : 'Sign In'}
-          </button>
-        </form>
-
-        <p className="text-center mt-4 text-gray-600">
-          Don't have an account?{' '}
-          <Link to="/signup" className="text-indigo-600 font-semibold">Sign up</Link>
-        </p>
+          <div style={{marginTop:8,fontSize:13,color:'rgba(255,255,255,0.65)'}}>
+            Don't have an account? <Link to="/signup" style={{color:'#d7c3ff',fontWeight:700}}>Create account</Link>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -47,3 +47,7 @@ export const taskAPI = {
 };
 
 export default api;
+
+export const configAPI = {
+  getConfig: () => api.get('/config')
+};

@@ -54,32 +54,42 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white rounded-xl shadow-2xl p-8">
-        <h2 className="text-3xl font-bold text-center mb-2">Create Account</h2>
-        <p className="text-gray-600 text-center mb-6">Sign up to get started</p>
+    <div className="auth-outer">
+      <div className="auth-card">
+        <div className="auth-left">
+          <div className="logo">ED TECH TASK MANAGER</div>
 
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-            {error}
+          <div className="visual-card" style={{flex:1,display:'flex',alignItems:'flex-end',justifyContent:'flex-start',padding:'18px'}}>
+            <div>
+              <h4>Capturing Moments,</h4>
+              <p>Create memories with tasks and progress.</p>
+            </div>
           </div>
-        )}
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="auth-right">
           <div>
-            <label className="block text-sm font-semibold mb-2">Email</label>
+            <h2>Create an account</h2>
+            <div className="muted">Join and manage learning tasks</div>
+          </div>
+
+          {error && (
+            <div style={{background:'#3b1f2c',padding:10,borderRadius:8,border:'1px solid rgba(255,255,255,0.04)'}}>
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} style={{display:'flex',flexDirection:'column',gap:12}}>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500"
+              className="auth-input"
+              placeholder="Email"
             />
-          </div>
 
-          <div>
-            <label className="block text-sm font-semibold mb-2">Password</label>
             <input
               type="password"
               name="password"
@@ -87,52 +97,55 @@ const Signup = () => {
               onChange={handleChange}
               required
               minLength="6"
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500"
+              className="auth-input"
+              placeholder="Password"
             />
-          </div>
 
-          <div>
-            <label className="block text-sm font-semibold mb-2">Role</label>
             <select
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500"
+              className="auth-input"
             >
               <option value="student">Student</option>
               <option value="teacher">Teacher</option>
             </select>
+
+            {formData.role === 'student' && (
+              <div style={{display:'flex',flexDirection:'column',gap:8}}>
+                <input
+                  type="text"
+                  name="teacherId"
+                  value={formData.teacherId}
+                  onChange={handleChange}
+                  required
+                  className="auth-input"
+                  placeholder="Teacher ID"
+                />
+                <div style={{fontSize:12,color:'rgba(255,255,255,0.6)'}}>Enter your teacher's ID</div>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="auth-cta"
+            >
+              {loading ? 'Creating account...' : 'Sign Up'}
+            </button>
+          </form>
+
+          <div className="auth-divider">Or register with</div>
+
+          <div className="social-row">
+            <button className="social-btn">Google</button>
+            <button className="social-btn">Apple</button>
           </div>
 
-          {formData.role === 'student' && (
-            <div>
-              <label className="block text-sm font-semibold mb-2">Teacher ID</label>
-              <input
-                type="text"
-                name="teacherId"
-                value={formData.teacherId}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500"
-                placeholder="Ask your teacher for their ID"
-              />
-              <p className="text-xs text-gray-500 mt-1">Enter the MongoDB ObjectId of your teacher</p>
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 disabled:bg-purple-400"
-          >
-            {loading ? 'Creating account...' : 'Sign Up'}
-          </button>
-        </form>
-
-        <p className="text-center mt-4 text-gray-600">
-          Already have an account?{' '}
-          <Link to="/login" className="text-purple-600 font-semibold">Sign in</Link>
-        </p>
+          <div style={{marginTop:8,fontSize:13,color:'rgba(255,255,255,0.65)'}}>
+            Already have an account? <Link to="/login" style={{color:'#d7c3ff',fontWeight:700}}>Sign in</Link>
+          </div>
+        </div>
       </div>
     </div>
   );

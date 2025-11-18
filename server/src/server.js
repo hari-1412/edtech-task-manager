@@ -36,6 +36,15 @@ app.get('/', (req, res) => {
   });
 });
 
+// Feature/config endpoint - expose minimal runtime flags to clients
+app.get('/config', (req, res) => {
+  res.json({
+    success: true,
+    enableGpt5Mini: true,
+    aiModel: process.env.DEFAULT_AI_MODEL || 'gpt-5-mini'
+  });
+});
+
 app.use('/auth', authRoutes);
 app.use('/tasks', taskRoutes);
 

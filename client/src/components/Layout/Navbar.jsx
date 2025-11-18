@@ -12,25 +12,21 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-indigo-600 text-white shadow-lg">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">EdTech Task Manager</h1>
-            {user && (
-              <p className="text-sm text-indigo-200">
-                {user.email} • {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
-                {user.role === 'student' && user.teacher && ` • Teacher: ${user.teacher.email}`}
-              </p>
-            )}
-          </div>
-          <button
-            onClick={handleLogout}
-            className="bg-white text-indigo-600 px-4 py-2 rounded-lg font-semibold hover:bg-indigo-50"
-          >
-            Logout
-          </button>
+    <nav className="topbar">
+      <div className="brand">
+        <div className="dot" style={{width:36,height:36,borderRadius:8,background:'linear-gradient(135deg,#2f6ef0,#7c3aed)'}}></div>
+        <div>
+          <h1>ED TECH TASK MANAGER</h1>
+          {user && (
+            <div style={{fontSize:12,color:'#6b7280'}}>
+              {user.email} • {user.role.charAt(0).toUpperCase() + user.role.slice(1)}{user.role === 'student' && user.teacher && ` • Teacher: ${user.teacher.email}`}
+            </div>
+          )}
         </div>
+      </div>
+
+      <div>
+        <button onClick={handleLogout} className="logout-btn">Logout</button>
       </div>
     </nav>
   );

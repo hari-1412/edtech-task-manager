@@ -18,6 +18,7 @@ const Dashboard = () => {
     progress: 'not-started'
   });
   const { user } = useAuth();
+  const [activeMenu, setActiveMenu] = useState('dashboard');
 
   const fetchTasks = async () => {
     try {
@@ -125,6 +126,8 @@ const Dashboard = () => {
     notStarted: tasks.filter(t => t.progress === 'not-started').length
   };
 
+  const dataSource = filter === 'all' ? tasks : filteredTasks;
+
   if (loading) {
     return (
       <>
@@ -142,8 +145,50 @@ const Dashboard = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="app-layout">
+        <aside className="sidebar">
+          <div className="logo">
+            <div className="dot"></div>
+            <div>
+              <h3>ED TECH TASK MANAGER</h3>
+              <div style={{fontSize:12,color:'#6b7280'}}>Task manager</div>
+            </div>
+          </div>
+
+          <h3>MENU</h3>
+          <div style={{marginTop:8}}>
+            <div
+              className={`menu-item ${activeMenu === 'dashboard' ? 'active' : ''}`}
+              onClick={() => { setActiveMenu('dashboard'); setFilter(user.role === 'teacher' ? 'all' : 'all'); }}
+            >
+              <div className="icon">🏠</div> Dashboard
+            </div>
+            <div
+              className={`menu-item ${activeMenu === 'tasks' ? 'active' : ''}`}
+              onClick={() => { setActiveMenu('tasks'); setFilter('all'); }}
+            >
+              <div className="icon">📋</div> Tasks
+            </div>
+          </div>
+
+          <h3 style={{marginTop:18}}>MESSAGES</h3>
+          <div className="messages">
+            <div className="message-row"><div className="icon">💬</div> Slack</div>
+            <div className="message-row"><div className="icon">📧</div> Gmail</div>
+            <div className="message-row"><div className="icon">🐙</div> GitHub</div>
+          </div>
+
+          <div className="footer">
+            <div style={{fontSize:13,color:'#6b7280'}}>Settings</div>
+            <div style={{display:'flex',alignItems:'center',gap:8}}>
+              <div style={{fontSize:12,color:'#6b7280'}}>Dark Mode</div>
+              <input type="checkbox" />
+            </div>
+          </div>
+        </aside>
+
+        <main className="main-content">
+          <div className="container-card">
           {error && (
             <div className="bg-red-50 border-2 border-red-200 text-red-700 px-6 py-4 rounded-2xl mb-6 shadow-lg">
               <div className="flex items-center">
@@ -205,21 +250,31 @@ const Dashboard = () => {
           </div>
 
           {/* Header */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 bg-white rounded-2xl shadow-lg p-6 border-2 border-gray-100">
-            <div>
-              <h2 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
-                {user.role === 'teacher' ? '🎓 All Learning Tasks' : '📝 My Learning Tasks'}
-              </h2>
-              <p className="text-gray-500 text-lg">Manage and track your progress</p>
+          <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-gray-100 mb-6">
+            <div className="tasks-header">
+              <div>
+                <h1 className="text-3xl font-extrabold">Tasks</h1>
+                <p className="text-gray-500">{user.role === 'teacher' ? '🎓 All Learning Tasks' : '📝 My Learning Tasks'}</p>
+              </div>
+
+              <div style={{display:'flex',alignItems:'center',gap:12}}>
+                <div className="view-toggle">
+                  <button className="view-btn" aria-label="table view">📊</button>
+                  <button className="view-btn" aria-label="kanban view">🗂️</button>
+                </div>
+
+                <div style={{display:'flex',alignItems:'center',gap:8}}>
+                  <div style={{display:'flex',alignItems:'center',gap:8}}>
+                    <div style={{width:36,height:36,borderRadius:18,background:'#eee',display:'inline-flex',alignItems:'center',justifyContent:'center'}}>👩‍🎓</div>
+                    <div style={{width:36,height:36,borderRadius:18,background:'#eee',display:'inline-flex',alignItems:'center',justifyContent:'center'}}>👨‍🏫</div>
+                    <div style={{width:36,height:36,borderRadius:18,background:'#eee',display:'inline-flex',alignItems:'center',justifyContent:'center'}}>🧑‍💻</div>
+                    <div style={{width:36,height:36,borderRadius:18,background:'#fff',display:'inline-flex',alignItems:'center',justifyContent:'center',border:'2px dashed rgba(0,0,0,0.06)'}}>+{Math.max(0, taskStats.total - 3)}</div>
+                  </div>
+
+                  <button onClick={() => openModal()} className="create-primary">➕ Create Task</button>
+                </div>
+              </div>
             </div>
-            
-            <button
-              onClick={() => openModal()}
-              className="mt-4 md:mt-0 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-4 rounded-2xl font-bold shadow-lg hover:shadow-2xl transition transform hover:scale-105 flex items-center space-x-2"
-            >
-              <span className="text-2xl">➕</span>
-              <span>Create New Task</span>
-            </button>
           </div>
 
           {/* Filters */}
@@ -252,85 +307,141 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Tasks Grid */}
-          {filteredTasks.length === 0 ? (
-            <div className="bg-white rounded-2xl shadow-lg p-16 text-center border-2 border-gray-100">
-              <div className="text-8xl mb-6">📭</div>
-              <h3 className="text-3xl font-bold text-gray-800 mb-4">No tasks found</h3>
-              <p className="text-gray-500 text-lg mb-8">Create your first task to get started on your learning journey!</p>
-              <button
-                onClick={() => openModal()}
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-4 rounded-2xl font-bold shadow-lg hover:shadow-2xl transition transform hover:scale-105 inline-flex items-center space-x-2"
-              >
-                <span className="text-2xl">➕</span>
-                <span>Create First Task</span>
-              </button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredTasks.map((task) => (
-                <div
-                  key={task._id}
-                  className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition border-2 border-gray-100 overflow-hidden group transform hover:scale-105"
-                >
-                  <div className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-3xl">{getProgressIcon(task.progress)}</span>
-                        <span className={`px-4 py-2 rounded-xl text-xs font-bold border-2 uppercase tracking-wide ${getProgressColor(task.progress)}`}>
-                          {task.progress.replace('-', ' ')}
-                        </span>
-                      </div>
-                      {task.dueDate && (
-                        <div className="bg-indigo-50 px-3 py-2 rounded-xl border border-indigo-200">
-                          <div className="flex items-center space-x-1 text-indigo-600">
-                            <span>📅</span>
-                            <span className="text-xs font-semibold">{new Date(task.dueDate).toLocaleDateString()}</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <h3 className="text-2xl font-bold text-gray-800 mb-3 group-hover:text-indigo-600 transition">
-                      {task.title}
-                    </h3>
-                    
-                    <p className="text-gray-600 mb-4 line-clamp-3">
-                      {task.description}
-                    </p>
-
-                    {user.role === 'teacher' && task.userId?.email && (
-                      <div className="bg-purple-50 px-4 py-3 rounded-xl mb-4 border border-purple-200">
-                        <div className="flex items-center space-x-2">
-                          <span>👤</span>
-                          <span className="text-purple-700 font-semibold text-sm">{task.userId.email}</span>
-                        </div>
-                      </div>
-                    )}
-
-                    {isOwner(task) && (
-                      <div className="grid grid-cols-2 gap-3 pt-4 border-t-2 border-gray-100">
-                        <button
-                          onClick={() => openModal(task)}
-                          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center space-x-2"
-                        >
-                          <span>✏️</span>
-                          <span>Edit</span>
-                        </button>
-                        <button
-                          onClick={() => handleDelete(task._id)}
-                          className="bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center space-x-2"
-                        >
-                          <span>🗑️</span>
-                          <span>Delete</span>
-                        </button>
-                      </div>
-                    )}
+          {/* Board / Tasks */}
+          <div className="board-wrap">
+            {filteredTasks.length === 0 ? (
+              <div className="bg-white rounded-2xl shadow-lg p-16 text-center border-2 border-gray-100">
+                <div className="text-8xl mb-6">📭</div>
+                <h3 className="text-3xl font-bold text-gray-800 mb-4">No tasks found</h3>
+                <p className="text-gray-500 text-lg mb-8">Create your first task to get started on your learning journey!</p>
+                <button onClick={() => openModal()} className="create-primary">➕ Create First Task</button>
+              </div>
+            ) : (
+              <div className="board-columns">
+                {/* To Do */}
+                <div className="column">
+                  <div className="column-header">
+                    <div className="column-title">To Do</div>
+                    <div className="column-count">{dataSource.filter(t => t.progress === 'not-started').length}</div>
                   </div>
+                  {dataSource.filter(t => t.progress === 'not-started').map(task => (
+                    <div key={task._id} className="board-card">
+                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'start',gap:8}}>
+                        <div style={{fontWeight:700}}>{task.title}</div>
+                        <div className={`px-3 py-1 rounded-xl text-xs font-semibold ${getProgressColor(task.progress)}`}>
+                          {task.progress.replace('-', ' ')}
+                        </div>
+                      </div>
+                      <div className="small">{task.description?.slice(0,120)}</div>
+                      <div className="meta" style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:8}}>
+                        <div className="small">{getProgressIcon(task.progress)} {task.userId?.email && <span>{task.userId.email}</span>}</div>
+                        <div style={{display:'flex',gap:8}}>
+                          {isOwner(task) ? (
+                            <>
+                              <button onClick={() => openModal(task)} className="card-action">✏️ Edit</button>
+                              <button onClick={() => handleDelete(task._id)} className="card-action delete">🗑️ Delete</button>
+                            </>
+                          ) : (
+                            <div className="small muted">View only</div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
+
+                {/* In Progress */}
+                <div className="column">
+                  <div className="column-header">
+                    <div className="column-title">In Progress</div>
+                    <div className="column-count">{dataSource.filter(t => t.progress === 'in-progress').length}</div>
+                  </div>
+                  {dataSource.filter(t => t.progress === 'in-progress').map(task => (
+                    <div key={task._id} className="board-card">
+                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'start',gap:8}}>
+                        <div style={{fontWeight:700}}>{task.title}</div>
+                        <div className={`px-3 py-1 rounded-xl text-xs font-semibold ${getProgressColor(task.progress)}`}>
+                          {task.progress.replace('-', ' ')}
+                        </div>
+                      </div>
+                      <div className="small">{task.description?.slice(0,120)}</div>
+                      <div className="meta" style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:8}}>
+                        <div className="small">{getProgressIcon(task.progress)}</div>
+                        <div style={{display:'flex',gap:8}}>
+                          {isOwner(task) ? (
+                            <>
+                              <button onClick={() => openModal(task)} className="card-action">✏️ Edit</button>
+                              <button onClick={() => handleDelete(task._id)} className="card-action delete">🗑️ Delete</button>
+                            </>
+                          ) : (
+                            <div className="small muted">View only</div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* In Review */}
+                <div className="column">
+                  <div className="column-header">
+                    <div className="column-title">In Review</div>
+                    <div className="column-count">{dataSource.filter(t => t.progress === 'in-review').length}</div>
+                  </div>
+                  {dataSource.filter(t => t.progress === 'in-review').map(task => (
+                    <div key={task._id} className="board-card">
+                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'start',gap:8}}>
+                        <div style={{fontWeight:700}}>{task.title}</div>
+                        <div className={`px-3 py-1 rounded-xl text-xs font-semibold ${getProgressColor(task.progress)}`}>
+                          {task.progress.replace('-', ' ')}
+                        </div>
+                      </div>
+                      <div className="small">{task.description?.slice(0,120)}</div>
+                      <div style={{display:'flex',justifyContent:'flex-end',marginTop:8}}>
+                        {isOwner(task) ? (
+                          <>
+                            <button onClick={() => openModal(task)} className="card-action">✏️ Edit</button>
+                            <button onClick={() => handleDelete(task._id)} className="card-action delete">🗑️ Delete</button>
+                          </>
+                        ) : (
+                          <div className="small muted">View only</div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Done */}
+                <div className="column">
+                  <div className="column-header">
+                    <div className="column-title">Done</div>
+                    <div className="column-count">{dataSource.filter(t => t.progress === 'completed').length}</div>
+                  </div>
+                  {dataSource.filter(t => t.progress === 'completed').map(task => (
+                    <div key={task._id} className="board-card">
+                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'start',gap:8}}>
+                        <div style={{fontWeight:700}}>{task.title}</div>
+                        <div className={`px-3 py-1 rounded-xl text-xs font-semibold ${getProgressColor(task.progress)}`}>
+                          {task.progress.replace('-', ' ')}
+                        </div>
+                      </div>
+                      <div className="small">{task.description?.slice(0,120)}</div>
+                      <div style={{display:'flex',justifyContent:'flex-end',marginTop:8}}>
+                        {isOwner(task) ? (
+                          <>
+                            <button onClick={() => openModal(task)} className="card-action">✏️ Edit</button>
+                            <button onClick={() => handleDelete(task._id)} className="card-action delete">🗑️ Delete</button>
+                          </>
+                        ) : (
+                          <div className="small muted">View only</div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Modal */}
           {showModal && (
@@ -433,8 +544,9 @@ const Dashboard = () => {
               </div>
             </div>
           )}
-        </div>
-      </div>
+          </div>{/* close .container-card */}
+        </main>
+      </div>{/* close .app-layout */}
     </>
   );
 };
