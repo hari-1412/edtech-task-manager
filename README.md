@@ -8,8 +8,8 @@ This application enables teachers and students to manage learning tasks with rol
 - **Students**: Create, view, update, and delete their own learning tasks
 - **Teachers**: View all tasks from assigned students while maintaining their own tasks
 
-**Live Demo:** [If deployed, add link]
-**Video Walkthrough:** [Add YouTube/Drive link]
+**Live Demo:** [https://drive.google.com/file/d/15OyS5Qc0LTsCGXamyUVt17R9nbg6Tmej/view?usp=drive_link]
+**Video Walkthrough:** [https://drive.google.com/file/d/16aHSeyPDaj5VBqxwpj29STHHQegB6_QE/view?usp=sharing]
 
 ---
 
@@ -538,7 +538,7 @@ Through building this project, I gained practical, hands-on experience with:
 
 ## 📹 Video Walkthrough
 
-**Link:** [Add your YouTube/Google Drive link here]
+**Link:** [https://drive.google.com/file/d/16aHSeyPDaj5VBqxwpj29STHHQegB6_QE/view?usp=sharing]
 
 **Contents (5-10 minutes):**
 1. **Demo (3-4 min):**
@@ -588,4 +588,5 @@ This project was created as part of a Full-Stack Developer assignment for DIGITI
 
 For questions or feedback about this project:
 - Open an issue in the GitHub repository
-- Email: [Your email]
+- College Email: [22r11a66b8@gcet.edu.in]
+- Personal Mail: [harigoud1412@gmail.com]
